@@ -34,15 +34,6 @@ def get_current_user():
         return None
     return sess.user
 
-def login_required(f):
-    @functools.wraps(f)
-    def decorated(*args, **kwargs):
-        user = get_current_user()
-        if not user:
-            return jsonify({"error": "Unauthorized. Please log in."}), 401
-        return f(*args, **kwargs)
-    return decorated
-
 def admin_required(f):
     @functools.wraps(f)
     def decorated(*args, **kwargs):
@@ -53,3 +44,14 @@ def admin_required(f):
             return jsonify({"error": "Forbidden. Admin access only."}), 403
         return f(*args, **kwargs)
     return decorated
+
+from flask import session, jsonify
+from functools import wraps
+
+def login_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if "user_id" not in session:
+            return jsonify({"message": "Unauthorized"}), 401
+        return func(*args, **kwargs)
+    return wrapper
