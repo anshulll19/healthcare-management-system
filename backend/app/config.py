@@ -5,7 +5,7 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "ayushcare-secret-2026")
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
-        "postgresql://postgres:password@localhost:5432/healthcare_db"
+        "postgresql://postgres:7078036039@localhost:5432/healthcare_db"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SESSION_COOKIE_HTTPONLY = True
@@ -15,5 +15,5 @@ class Config:
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:password@localhost:5432/healthcare_test_db"
+    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:7078036039@localhost:5432/healthcare_test_db"
     BCRYPT_LOG_ROUNDS = 4
