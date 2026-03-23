@@ -22,7 +22,7 @@ def download_report():
     title_style = ParagraphStyle("title", parent=styles["Heading1"], fontSize=18, spaceAfter=6)
     sub_style   = ParagraphStyle("sub", parent=styles["Normal"], fontSize=10, textColor=colors.grey)
     story = []
-    story.append(Paragraph("AyushCare — AI Smart Healthcare Assistance for Bharat", title_style))
+    story.append(Paragraph("Healthcare Management System — AI Smart Healthcare Assistance", title_style))
     story.append(Paragraph(f"Health Report — {user.name}", styles["Heading2"]))
     story.append(Paragraph(f"Generated: {datetime.utcnow().strftime('%d %B %Y, %H:%M UTC')}", sub_style))
     story.append(Spacer(1, 0.5*cm))
@@ -54,5 +54,5 @@ def download_report():
         story.append(table)
     doc.build(story)
     buffer.seek(0)
-    filename = f"ayushcare_report_{user.name.replace(' ', '_')}_{datetime.utcnow().strftime('%Y%m%d')}.pdf"
+    filename = f"healthcare_report_{user.name.replace(' ', '_')}_{datetime.utcnow().strftime('%Y%m%d')}.pdf"
     return send_file(buffer, as_attachment=True, download_name=filename, mimetype="application/pdf")

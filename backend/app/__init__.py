@@ -2,10 +2,17 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from .config import Config
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits=["300 per day", "60 per hour"],
+    storage_uri="memory://"
+)
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -13,7 +20,8 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     bcrypt.init_app(app)
-    CORS(app, supports_credentials=True)
+    limiter.init_app(app)
+    CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
     from .routes.auth import auth_bp
     from .routes.health import health_bp

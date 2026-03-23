@@ -2,7 +2,7 @@ import os
 from datetime import timedelta
 
 class Config:
-    SECRET_KEY = os.environ.get("SECRET_KEY", "ayushcare-secret-2026")
+    SECRET_KEY = os.environ.get("SECRET_KEY", "healthcare-management-secret-2026")
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
         "postgresql://postgres:7078036039@localhost:5432/healthcare_db"
