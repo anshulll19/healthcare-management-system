@@ -15,7 +15,7 @@ reports_bp = Blueprint("reports", __name__)
 @login_required
 def download_report():
     user    = get_current_user()
-    records = HealthRecord.query.filter_by(user_id=user.id).order_by(HealthRecord.entry_date.asc()).all()
+    records = HealthRecord.query.filter_by(user_id=user.id).order_by(HealthRecord.created_at.asc()).all()
     buffer  = BytesIO()
     doc     = SimpleDocTemplate(buffer, pagesize=A4, leftMargin=2*cm, rightMargin=2*cm, topMargin=2*cm, bottomMargin=2*cm)
     styles  = getSampleStyleSheet()
@@ -33,7 +33,7 @@ def download_report():
         rows   = [header]
         for r in records:
             rows.append([
-                r.entry_date.strftime("%d/%m/%Y"),
+                r.created_at.strftime("%d/%m/%Y"),
                 str(r.weight)      or "—",
                 str(r.height)      or "—",
                 r.blood_pressure   or "—",

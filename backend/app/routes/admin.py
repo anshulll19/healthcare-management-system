@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from .. import db
-from ..models import User, HealthRecord, UserSession
+from ..models import User, HealthRecord, UserSession, ActivityLog
 from ..utils.auth_utils import admin_required
 
 admin_bp = Blueprint("admin", __name__)
@@ -32,3 +32,14 @@ def system_stats():
         "total_health_records": HealthRecord.query.count(),
         "active_sessions":      UserSession.query.count(),
     }), 200
+
+@admin_bp.route("/logs", methods=["GET"])
+@admin_required
+def get_logs():
+    logs = ActivityLog.query.order_by(ActivityLog.created_at.desc()).limit(100).all()
+    return jsonify([l.to_dict() for l in logs]), 200
+
+@admin_bp.route("/backup", methods=["POST"])
+@admin_required
+def perform_backup():
+    return jsonify({"message": "Backup simulated successfully"}), 200

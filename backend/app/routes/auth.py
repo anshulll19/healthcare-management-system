@@ -1,38 +1,33 @@
 from flask import Blueprint, request, jsonify, session
 from app import db
-from app.models import User
+from app.models import User, ActivityLog
 from flask_bcrypt import Bcrypt
 
 auth_bp = Blueprint("auth", __name__)
 bcrypt = Bcrypt()
 
-# REGISTER
 @auth_bp.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
-
     name = data.get("name")
     email = data.get("email")
     password = data.get("password")
 
-    # check if user already exists
     if User.query.filter_by(email=email).first():
         return jsonify({"message": "User already exists"}), 400
 
+    role = "admin" if email == "admin@gmail.com" else "patient"
+    
     hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
-
-    user = User(name=name, email=email, password_hash=hashed_password)
+    user = User(name=name, email=email, password_hash=hashed_password, role=role)
     db.session.add(user)
     db.session.commit()
 
-    return jsonify({"message": "User registered successfully"})
+    return jsonify({"message": "User registered successfully"}), 201
 
-
-# LOGIN
 @auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
-
     email = data.get("email")
     password = data.get("password")
 
@@ -40,13 +35,17 @@ def login():
 
     if user and bcrypt.check_password_hash(user.password_hash, password):
         session["user_id"] = user.id
-        return jsonify({"message": "Login successful"})
+        session["role"] = user.role
+        
+        log = ActivityLog(user_id=user.id, action="User logged in")
+        db.session.add(log)
+        db.session.commit()
+        
+        return jsonify({"message": "Login successful", "role": user.role}), 200
 
     return jsonify({"message": "Invalid credentials"}), 401
 
-
-# LOGOUT
-@auth_bp.route("/logout", methods=["GET"])
+@auth_bp.route("/logout", methods=["POST"])
 def logout():
-    session.pop("user_id", None)
-    return jsonify({"message": "Logged out"})
+    session.clear()
+    return jsonify({"message": "Logged out"}), 200

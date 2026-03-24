@@ -13,20 +13,20 @@ class User(db.Model):
     sessions       = db.relationship("UserSession", backref="user", lazy=True, cascade="all, delete-orphan")
 
     def to_dict(self):
-        return {"id": self.id, "name": self.name, "email": self.email, "role": self.role, "created_at": self.created_at.isoformat()}
+        return {"id": self.id, "name": self.name, "email": self.email, "role": self.role, "created_at": self.created_at.strftime("%Y-%m-%d %H:%M:%S")}
 
 class HealthRecord(db.Model):
     __tablename__ = "health_records"
     id             = db.Column(db.Integer, primary_key=True)
     user_id        = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    entry_date     = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    created_at     = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     weight         = db.Column(db.Numeric(5, 2))
     height         = db.Column(db.Numeric(5, 2))
     blood_pressure = db.Column(db.String(20))
     blood_sugar    = db.Column(db.Integer)
 
     def to_dict(self):
-        return {"id": self.id, "user_id": self.user_id, "entry_date": self.entry_date.isoformat(), "weight": float(self.weight) if self.weight else None, "height": float(self.height) if self.height else None, "blood_pressure": self.blood_pressure, "blood_sugar": self.blood_sugar}
+        return {"id": self.id, "user_id": self.user_id, "created_at": self.created_at.strftime("%Y-%m-%d %H:%M:%S"), "weight": float(self.weight) if self.weight else None, "height": float(self.height) if self.height else None, "blood_pressure": self.blood_pressure, "blood_sugar": self.blood_sugar}
 
 class UserSession(db.Model):
     __tablename__ = "sessions"
@@ -37,3 +37,18 @@ class UserSession(db.Model):
 
     def is_valid(self):
         return datetime.utcnow() < self.expiry_time
+
+class ActivityLog(db.Model):
+    __tablename__ = "activity_logs"
+    id            = db.Column(db.Integer, primary_key=True)
+    user_id       = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    action        = db.Column(db.String(255), nullable=False)
+    created_at    = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "action": self.action,
+            "created_at": self.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        }
