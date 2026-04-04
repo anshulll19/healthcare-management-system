@@ -24,3 +24,34 @@ export DATABASE_URL="postgresql://postgres:password@localhost:5432/healthcare_db
 export SECRET_KEY="ayushcare-secret-2026"
 python run.py
 ```
+
+## Project Structure
+```text
+healthcare-management-system/
+├── backend/                  # Flask Backend Application
+│   ├── app/                  # Application Core
+│   │   ├── routes/           # API Blueprint controllers
+│   │   ├── models.py         # SQLAlchemy schema definitions
+│   │   ├── config.py         # Environment configurations
+│   │   └── __init__.py       # App factory & extension initialization
+│   ├── instance/             # Local database storage 
+│   ├── requirements.txt      # Python dependencies
+│   ├── run.py                # Server entry point
+│   └── seed_db.py            # Database seeding utility
+└── frontend/                 # React Frontend Application (Vite)
+    ├── public/               # Static web assets
+    ├── src/                  # React component sources
+    │   ├── AdminDashboard.tsx# Superuser administration panel
+    │   ├── App.tsx           # Global routing logic
+    │   ├── Auth.tsx          # Registration and Login controller
+    │   ├── Dashboard.tsx     # Patient summary hub
+    │   ├── Layout.tsx        # Navigation wrapping UI
+    │   ├── LogHealth.tsx     # Vitals logging view
+    │   ├── Logs.tsx          # Administrative system activity log
+    │   ├── Patients.tsx      # Patient historical data table
+    │   ├── Reports.tsx       # Secure medical document generation
+    │   └── main.tsx          # React application mount
+    ├── package.json          # Node module assignments
+    ├── tailwind.config.js    # Styling framework assignments
+    └── vite.config.ts        # Build tool compiler controls
+```
