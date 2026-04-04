@@ -1,4 +1,4 @@
-# AyushCare — AI Smart Healthcare Assistance for Bharat
+# Healthcare Management System
 **Team MedNexus** — University of Delhi, Dept. of Computer Engineering, Feb 2026
 
 | Member | Roll No | Contribution |
@@ -21,7 +21,7 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 export DATABASE_URL="postgresql://postgres:password@localhost:5432/healthcare_db"
-export SECRET_KEY="ayushcare-secret-2026"
+export SECRET_KEY="healthcare-secret-2026"
 python run.py
 ```
 
